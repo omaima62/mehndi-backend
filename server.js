@@ -1,16 +1,12 @@
-// 🔹 Required Packages
 const express = require("express");
 const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-// 🔹 App Setup
 const app = express();
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-// 🔹 Contact Form Endpoint
 app.post("/contact", async (req, res) => {
     const { name, email, message } = req.body;
 
@@ -23,13 +19,11 @@ app.post("/contact", async (req, res) => {
             secure: false,
             auth: {
                 user: "omaimamujeebakbar@gmail.com",
-                pass: "zouctqbuhqiaftrv", // ⚠️ no spaces
+                pass: "gaavmyifzjczbfky", // App Password
             },
         });
 
-        console.log("🔌 Verifying transporter...");
         await transporter.verify();
-        console.log("✅ Transporter verified");
 
         const mailOptions = {
             from: `"Mehndi Website" <omaimamujeebakbar@gmail.com>`,
@@ -39,21 +33,15 @@ app.post("/contact", async (req, res) => {
             text: `Name: ${name}\nEmail: ${email}\nMessage:\n${message}`,
         };
 
-        console.log("📨 Sending mail...");
         await transporter.sendMail(mailOptions);
-        console.log("✅ Mail sent successfully");
-
         res.status(200).send("Message sent successfully");
-
     } catch (error) {
-        console.error("❌ MAIL ERROR FULL DETAILS 👇");
         console.error(error);
         res.status(500).send("Message not sent");
     }
 });
 
-// 🔹 Start Server
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`✅ Server running on port ${PORT}`);
+    console.log(`Server running on port ${PORT}`);
 });
